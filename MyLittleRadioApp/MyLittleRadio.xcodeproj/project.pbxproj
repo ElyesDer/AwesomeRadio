@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		06AD012D2CC10D590093665F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 06AD012C2CC10D590093665F /* ComposableArchitecture */; };
+		51535F892CD383E900D48028 /* Requester in Frameworks */ = {isa = PBXBuildFile; productRef = 51535F882CD383E900D48028 /* Requester */; };
+		515360102CD3B50900D48028 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 5153600F2CD3B50900D48028 /* Data */; };
+		515360132CD3B51C00D48028 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 515360122CD3B51C00D48028 /* Domain */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +60,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				06AD012D2CC10D590093665F /* ComposableArchitecture in Frameworks */,
+				51535F892CD383E900D48028 /* Requester in Frameworks */,
+				515360132CD3B51C00D48028 /* Domain in Frameworks */,
+				515360102CD3B50900D48028 /* Data in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,6 +124,9 @@
 			name = MyLittleRadio;
 			packageProductDependencies = (
 				06AD012C2CC10D590093665F /* ComposableArchitecture */,
+				51535F882CD383E900D48028 /* Requester */,
+				5153600F2CD3B50900D48028 /* Data */,
+				515360122CD3B51C00D48028 /* Domain */,
 			);
 			productName = MyLittleRadio;
 			productReference = 06AD00FD2CC10D020093665F /* MyLittleRadio.app */;
@@ -203,6 +212,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				06AD012B2CC10D590093665F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+				5153600E2CD3B50900D48028 /* XCLocalSwiftPackageReference "Data" */,
+				515360112CD3B51C00D48028 /* XCLocalSwiftPackageReference "Domain" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 06AD00FE2CC10D020093665F /* Products */;
@@ -603,6 +614,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		5153600E2CD3B50900D48028 /* XCLocalSwiftPackageReference "Data" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Data;
+		};
+		515360112CD3B51C00D48028 /* XCLocalSwiftPackageReference "Domain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Domain;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		06AD012B2CC10D590093665F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -619,6 +641,18 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 06AD012B2CC10D590093665F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		51535F882CD383E900D48028 /* Requester */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Requester;
+		};
+		5153600F2CD3B50900D48028 /* Data */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Data;
+		};
+		515360122CD3B51C00D48028 /* Domain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Domain;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
