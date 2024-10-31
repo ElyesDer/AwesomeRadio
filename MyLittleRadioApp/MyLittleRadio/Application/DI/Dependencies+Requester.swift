@@ -16,7 +16,7 @@ extension DependencyValues {
         )
     }
 
-    var requester: any Requester {
+    public var requester: any Requester {
         get { self[RequesterKey.self] }
         set { self[RequesterKey.self] = newValue }
     }

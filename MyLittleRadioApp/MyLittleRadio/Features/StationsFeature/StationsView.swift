@@ -28,6 +28,10 @@ struct StationsView: View {
                     }
                 }
             }
+            /// Warning: iOS16.4 Support only
+            .refreshable {
+                store.send(.onRefresh)
+            }
         }
         .task {
             store.send(

@@ -34,6 +34,7 @@
 		06AD00FD2CC10D020093665F /* MyLittleRadio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyLittleRadio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AD010E2CC10D030093665F /* MyLittleRadioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyLittleRadioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		06AD01182CC10D030093665F /* MyLittleRadioUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MyLittleRadioUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		515361112CD3F09800D48028 /* MyLittleRadio.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = MyLittleRadio.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -86,6 +87,7 @@
 		06AD00F42CC10D020093665F = {
 			isa = PBXGroup;
 			children = (
+				515361112CD3F09800D48028 /* MyLittleRadio.xctestplan */,
 				06AD00FF2CC10D020093665F /* MyLittleRadio */,
 				06AD01112CC10D030093665F /* MyLittleRadioTests */,
 				06AD011B2CC10D030093665F /* MyLittleRadioUITests */,

@@ -9,6 +9,7 @@ import Foundation
 
 public enum ListStationsUseCaseError: Error {
     case unableToLoadData
+    case unknown
 }
 
 public protocol ListStationsUseCase: Sendable {

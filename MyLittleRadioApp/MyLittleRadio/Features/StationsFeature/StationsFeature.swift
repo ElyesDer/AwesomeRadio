@@ -3,18 +3,19 @@
 import ComposableArchitecture
 import Domain
 
-enum StationStoreError: Error, Equatable {
-    case unableToLoadData
-    case unknown
-}
-
 @Reducer
 struct StationsFeature {
 
     @ObservableState
     struct State: Equatable {
+
+        enum ViewState: Equatable {
+            case error(String)
+            case idle
+        }
+
         var stations: [Station] = []
-        var error: StationStoreError?
+        var viewState: ViewState = .idle
     }
 
     @CasePathable
@@ -24,10 +25,13 @@ struct StationsFeature {
 
         case onAppear
 
-        // MARK: Action Store
+        // MARK: User Initiated Actions
+        case onRefresh
+
+        // MARK: Handlers
 
         case fetchStations
-        case setStations(Result<[Station], StationStoreError>)
+        case setStations(Result<[Station], ListStationsUseCaseError>)
     }
 
     // MARK: - Dependencies
@@ -53,12 +57,17 @@ struct StationsFeature {
             case .onAppear:
                 return .send(.fetchStations)
 
-                // MARK: Action Store
+                // MARK: User Initiated Actions
+            case .onRefresh:
+                return .send(.fetchStations)
+
+                // MARK: Handlers
 
             case .fetchStations:
                 return loadStations()
 
             case let .setStations(.success(stations)):
+                state.viewState = .idle
                 state.stations = stations
                 return .none
 
@@ -66,6 +75,7 @@ struct StationsFeature {
 
             case .setStations(.failure):
                 // handle error
+                state.viewState = .error("Unable To Load Data")
                 return .none
             }
         }
@@ -79,9 +89,7 @@ struct StationsFeature {
                 .setStations(
                     Result {
                         try await listStationUseCase.execute()
-                    }.mapError(
-                        mapErrors
-                    )
+                    }.mapError(mapErrors)
                 )
             )
         }
@@ -91,12 +99,12 @@ struct StationsFeature {
         )
     }
 
-    private func mapErrors(_ error: Error) -> StationStoreError {
+    private func mapErrors(_ error: Error) -> ListStationsUseCaseError {
         switch error {
         case is ListStationsUseCaseError:
             return .unableToLoadData
         default:
-            return .unknown
+            return ListStationsUseCaseError.unknown
         }
     }
 }
