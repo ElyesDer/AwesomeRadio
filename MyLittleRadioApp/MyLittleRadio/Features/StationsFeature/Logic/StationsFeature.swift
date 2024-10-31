@@ -6,6 +6,15 @@ import Domain
 @Reducer
 struct StationsFeature {
 
+    // MARK: - Navigation State
+
+    @Reducer
+    enum Path {
+        case detail(StationDetails)
+    }
+
+    // MARK: - Main State
+    
     @ObservableState
     struct State: Equatable {
 
@@ -14,8 +23,10 @@ struct StationsFeature {
             case idle
         }
 
-        var stations: [Station] = []
+        var stations: IdentifiedArrayOf<StationDetails.State> = []
         var viewState: ViewState = .idle
+
+        var path = StackState<Path.State>()
     }
 
     @CasePathable
@@ -32,6 +43,11 @@ struct StationsFeature {
 
         case fetchStations
         case setStations(Result<[Station], ListStationsUseCaseError>)
+
+        // MARK: Navigation
+        case details(StationDetails.State)
+        case path(StackActionOf<Path>)
+
     }
 
     // MARK: - Dependencies
@@ -51,24 +67,28 @@ struct StationsFeature {
     var body: some Reducer<State, Action> {
         Reduce { state, action in
             switch action {
-
+                
                 // MARK: ViewLifecycle
-
+                
             case .onAppear:
                 return .send(.fetchStations)
-
+                
                 // MARK: User Initiated Actions
             case .onRefresh:
                 return .send(.fetchStations)
-
+                
                 // MARK: Handlers
-
+                
             case .fetchStations:
                 return loadStations()
-
+                
             case let .setStations(.success(stations)):
                 state.viewState = .idle
-                state.stations = stations
+                state.stations = IdentifiedArrayOf(
+                    uniqueElements: stations.map {
+                        StationDetails.State.init(station: $0)
+                    }
+                )
                 return .none
 
                 // MARK: Error Handling
@@ -77,8 +97,21 @@ struct StationsFeature {
                 // handle error
                 state.viewState = .error("Unable To Load Data")
                 return .none
+
+                // MARK: Handle Navigation
+
+            case let .details(selectedStation):
+                state.path.append(.detail(selectedStation))
+                return .none
+
+            case .path:
+                return .none
             }
         }
+        .forEach(
+            \.path,
+             action: \.path
+        )
     }
 
     // MARK: Private helpers
@@ -108,3 +141,5 @@ struct StationsFeature {
         }
     }
 }
+
+extension StationsFeature.Path.State: Equatable {}

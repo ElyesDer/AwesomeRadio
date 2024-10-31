@@ -13,20 +13,59 @@ import Dependencies
 import MyLittleRadio
 
 @MainActor
+@Suite("Station Feature Test Suite")
 struct StationsFeatureTests {
 
     func makeStore(
         stations: [Station] = [],
-        listStationUseCase: ListStationsUseCase
+        listStationUseCase: ListStationsUseCase = ListStationsUseCaseMock(
+            stations: []
+        )
     ) -> TestStoreOf<StationsFeature> {
         TestStore(
-            initialState: StationsFeature.State(
-                stations: stations
+            initialState: StationsFeature.State.init(
+                stations: IdentifiedArrayOf(
+                    uniqueElements: stations.map {
+                        StationDetails.State.init(
+                            station: $0
+                        )
+                    }
+                )
             )
         ) {
             StationsFeature()
         } withDependencies: {
             $0.listStationUseCase = listStationUseCase
+        }
+    }
+
+    @Test("WHEN Detail Action Performed THEN Navigate To Detail")
+    func navigateToDetail() async throws {
+
+        // GIVEN
+
+        let stations = StationStub.generate(count: 2)
+
+        let stationStates: IdentifiedArrayOf<StationDetails.State> = IdentifiedArrayOf(
+            uniqueElements: stations
+                .map {
+                    StationDetails.State.init(
+                        station: $0
+                    )
+                }
+        )
+
+        let store = makeStore(
+            stations: stations
+        )
+
+        // WHEN
+
+        await store.send(.details(stationStates.first!)) {
+            // THEN
+            $0.path[id: 0] = .detail(
+                stationStates.first!
+            )
         }
     }
 

@@ -16,8 +16,6 @@ public struct Station: Sendable, Equatable, Identifiable {
     public let shortTitle: String
     public let type: String
     public let streamURL: String
-
-    // Value means ?
     public let liveRule: String
     public let primaryColor: String
     public let isMusical: Bool
