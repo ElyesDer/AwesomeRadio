@@ -7,10 +7,20 @@
 
 import Foundation
 
-enum ListStationsUseCaseError: Error {
+public enum ListStationsUseCaseError: Error {
     case unableToLoadData
 }
 
-protocol ListStationsUseCase {
+public protocol ListStationsUseCase: Sendable {
     func execute() async throws(ListStationsUseCaseError) -> [Station]
+}
+
+public extension DomainFactory {
+    static func makeListStationsUseCase(
+        stationRepository: StationRepository
+    ) -> ListStationsUseCase {
+        ListStationsUseCaseDefault(
+            stationRepository: stationRepository
+        )
+    }
 }

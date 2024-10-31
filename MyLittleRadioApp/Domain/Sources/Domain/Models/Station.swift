@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Station
-public struct Station {
+public struct Station: Sendable {
     let id: String
     let brandID: String
     let title: String

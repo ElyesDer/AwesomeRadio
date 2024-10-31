@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct StationsAPI: Codable {
+struct StationsAPI: Sendable, Codable {
     let stations: [StationAPI]
 }
 
 // MARK: - Station
-struct StationAPI: Codable {
+public struct StationAPI: Sendable, Codable {
     let id, brandID, title: String
     let hasTimeshift: Bool
     let shortTitle, type: String
@@ -33,7 +33,7 @@ struct StationAPI: Codable {
 }
 
 // MARK: - Analytics
-struct AnalyticsAPI: Codable {
+public struct AnalyticsAPI: Sendable, Codable {
     let value: String
     let stationAudienceID: Int
 
@@ -44,7 +44,7 @@ struct AnalyticsAPI: Codable {
 }
 
 // MARK: - Assets
-struct AssetsAPI: Codable {
+public struct AssetsAPI: Sendable, Codable {
     let squareImageURL: String
 
     enum CodingKeys: String, CodingKey {
@@ -53,6 +53,6 @@ struct AssetsAPI: Codable {
 }
 
 // MARK: - Colors
-struct ColorsAPI: Codable {
+public struct ColorsAPI: Sendable, Codable {
     let primary: String
 }

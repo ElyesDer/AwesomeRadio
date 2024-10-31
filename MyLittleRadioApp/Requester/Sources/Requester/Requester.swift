@@ -9,7 +9,7 @@ public enum RequesterError: Error {
     case response(Status)
 }
 
-public protocol Requester {
+public protocol Requester: Sendable {
     func fetch<T: Decodable>(
         from endpoint: Endpoint,
         as type: T.Type

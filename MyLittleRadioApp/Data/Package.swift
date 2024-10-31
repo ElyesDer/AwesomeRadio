@@ -38,6 +38,9 @@ let package = Package(
             dependencies: [
                 "Domain",
                 "Requester"
+            ],
+            swiftSettings: [
+                .enableExperimentalFeature("StrictConcurrency")
             ]
         ),
         .testTarget(

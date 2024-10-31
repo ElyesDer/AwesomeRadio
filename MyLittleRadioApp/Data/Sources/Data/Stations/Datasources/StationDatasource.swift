@@ -6,7 +6,18 @@
 //
 
 import Foundation
+import Requester
 
-protocol StationDatasource {
+public protocol StationDatasource: Sendable {
     func fetchStations() async throws -> [StationAPI]
+}
+
+public extension DataFactory {
+    static func makeRemoteStationDatasource(
+        requester: any Requester
+    ) -> StationDatasource {
+        RemoteStationDatasourceDefault(
+            apiClient: requester
+        )
+    }
 }

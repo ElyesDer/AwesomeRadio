@@ -2,7 +2,7 @@
 
 import Foundation
 
-struct Station: Codable, Equatable, Identifiable {
+struct Station: Sendable, Codable, Equatable, Identifiable {
 
     let id: String
     let title: String

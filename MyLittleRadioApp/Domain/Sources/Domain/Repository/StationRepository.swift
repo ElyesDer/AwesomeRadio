@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol StationRepository {
+public protocol StationRepository: Sendable {
     func fetchStations() async throws -> [Station]
 }
