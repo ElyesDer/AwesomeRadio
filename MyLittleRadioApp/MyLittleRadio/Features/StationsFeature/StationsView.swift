@@ -1,14 +1,12 @@
 // Copyright © Radio France. All rights reserved.
 
 import SwiftUI
-
 import ComposableArchitecture
 
 struct StationsView: View {
 
-    @Perception.Bindable private var store: StoreOf<StationsFeature>
-
-    @State var selectedStation: Station?
+    @Perception.Bindable
+    private var store: StoreOf<StationsFeature>
 
     init(store: StoreOf<StationsFeature>) {
         self.store = store
@@ -22,7 +20,9 @@ struct StationsView: View {
                         HStack(spacing: 8) {
                             Text(station.title)
                             Spacer()
-                            Image(systemName: "chevron.right")
+                            Image(
+                                systemName: "chevron.right"
+                            )
                         }
                         .frame(height: 50)
                     }
@@ -30,7 +30,21 @@ struct StationsView: View {
             }
         }
         .task {
-            store.send(.task)
+            store.send(
+                .onAppear
+            )
         }
     }
+}
+
+#Preview {
+    StationsView(
+        store: Store(
+            initialState: StationsFeature.State.init(
+                stations: StationFeatureMock.stations
+            )
+        ) {
+            StationsFeature()
+        }
+    )
 }

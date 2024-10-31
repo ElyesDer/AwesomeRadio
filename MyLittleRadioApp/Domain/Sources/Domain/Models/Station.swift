@@ -8,20 +8,20 @@
 import Foundation
 
 // MARK: - Station
-public struct Station: Sendable {
-    let id: String
-    let brandID: String
-    let title: String
-    let hasTimeshift: Bool
-    let shortTitle: String
-    let type: String
-    let streamURL: String
+public struct Station: Sendable, Equatable, Identifiable {
+    public let id: String
+    public let brandID: String
+    public let title: String
+    public let hasTimeshift: Bool
+    public let shortTitle: String
+    public let type: String
+    public let streamURL: String
 
     // Value means ?
-    let liveRule: String
-    let primaryColor: String
-    let isMusical: Bool
-    let squareImageURL: String?
+    public let liveRule: String
+    public let primaryColor: String
+    public let isMusical: Bool
+    public let squareImageURL: String?
 
     public init(
         id: String,

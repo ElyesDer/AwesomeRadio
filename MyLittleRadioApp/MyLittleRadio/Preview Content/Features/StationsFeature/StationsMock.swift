@@ -1,15 +1,20 @@
-// Copyright © Radio France. All rights reserved.
+//
+//  StationsMock.swift
+//  MyLittleRadio
+//
+//  Created by Elyes Derouiche on 31/10/2024.
+//
 
 import Foundation
 import Domain
 
-final class ApiManager {
-    func fetchStations() async -> [Station] {
-        let mockedData = [
+enum StationFeatureMock {
+    static var stations: [Station] {
+        return [
             Station(
                 id: "1",
                 brandID: "brandID",
-                title: "title",
+                title: "Station 1",
                 hasTimeshift: true,
                 shortTitle: "shortTitle",
                 type: "type",
@@ -23,7 +28,7 @@ final class ApiManager {
             Station(
                 id: "2",
                 brandID: "brandID",
-                title: "title",
+                title: "Station 2",
                 hasTimeshift: true,
                 shortTitle: "shortTitle",
                 type: "type",
@@ -35,9 +40,9 @@ final class ApiManager {
             ),
 
             Station(
-                id: "2",
+                id: "3",
                 brandID: "brandID",
-                title: "title",
+                title: "Station 3",
                 hasTimeshift: true,
                 shortTitle: "shortTitle",
                 type: "type",
@@ -48,6 +53,5 @@ final class ApiManager {
                 squareImageURL: "squareImageURL"
             )
         ]
-        return mockedData
     }
 }
