@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  AVAudioPlayer.swift
 //  AwesomePlayer
 //
 //  Created by Elyes Derouiche on 01/11/2024.
@@ -7,46 +7,78 @@
 
 import Foundation
 import AVFoundation
+import Combine
 
-public actor AVPlayerPlayback: AudioPlayer {
-    private var player: AVPlayer?
+public actor AwesomeMediaPlayer: MediaPlayer {
 
-    public init() {}
+    // MARK: Public Props
+
+    public var audioStatusPublisher: AsyncPublisher<AnyPublisher<AudioPlayerState, Never>> {
+        audioStatus.eraseToAnyPublisher().values
+    }
+
+    // MARK: Private Props
+
+    private var audioPlayer: AudioPlayback
+    private let audioStatus = CurrentValueSubject<AudioPlayerState, Never>(.idle)
+
+    public init(
+        audioPlayer: AudioPlayback
+    ) {
+        self.audioPlayer = audioPlayer
+    }
 
     public func play() async {
-        await player?.play()
+        await audioPlayer.play()
+        audioStatus.send(.playing)
     }
-
+    
+    public func play(item: AudioItem) async {
+        audioPlayer.removeAllItems()
+        audioPlayer.insert(
+            item
+        )
+        audioStatus.send(.playing)
+    }
+    
+    public func playNext() async {
+        guard audioPlayer.itemsCount() > 1 else {
+            await stop()
+            return
+        }
+        audioPlayer.advanceToNextItem()
+        await play()
+    }
+    
     public func pause() async {
-        await player?.pause()
+        await audioPlayer.pause()
+        audioStatus.send(.paused)
     }
-
+    
     public func stop() async {
-        await player?.pause()
-        player?.replaceCurrentItem(
-            with: nil
+        audioPlayer.removeAllItems()
+        audioStatus.send(.idle)
+    }
+    
+    public func addToQueue(item: AudioItem) {
+        audioPlayer.insert(
+            item
         )
     }
-}
 
-public class AudioQueueManager: PlayerQueue {
-    private var queue: [URL] = []
-    private var currentIndex: Int = 0
-
-    public init() {}
-
-    public func addToQueue(url: URL) {
-        queue.append(url)
+    public func seekTo<T: BinaryFloatingPoint>(_ time: T) async {
+        let targetTime = CMTime(
+            seconds: Double(time),
+            preferredTimescale: 600
+        )
+        await audioPlayer.seek(
+            to: targetTime
+        )
     }
 
-    public func playNext() {
-        guard currentIndex + 1 < queue.count else { return }
-        currentIndex += 1
-        // Logic to load the next URL for playback
-    }
-
-    public func resetQueue() {
-        queue.removeAll()
-        currentIndex = 0
+    public func adjustVolume<V: BinaryFloatingPoint>(
+        to volume: V
+    ) {
+        audioPlayer.volume = Float(volume)
     }
 }
