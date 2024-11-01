@@ -30,13 +30,6 @@ struct AppContainer {
     }
 
     var body: some Reducer<State, Action> {
-        Scope(
-            state: \.stations,
-            action: \.stations
-        ) {
-            StationsFeature()
-        }
-
         Reduce { state, action in
             switch action {
             case let .selectTab(tab):
@@ -47,6 +40,13 @@ struct AppContainer {
                 return .none
 
             }
+        }
+
+        Scope(
+            state: \.stations,
+            action: \.stations
+        ) {
+            StationsFeature()
         }
     }
 }

@@ -13,39 +13,45 @@ struct StationsView: View {
     }
 
     var body: some View {
-        NavigationStack(
-            path: $store.scope(
-                state: \.path,
-                action: \.path
-            )
-        ) {
-            WithPerceptionTracking {
-                ScrollView {
-                    LazyVStack(alignment: .leading) {
-                        ForEach(store.stations) { station in
-                            Text("Station")
-                                .onTapGesture {
-                                    store.send(.details(station))
+        WithPerceptionTracking {
+            NavigationStack(
+                path: $store.scope(
+                    state: \.path,
+                    action: \.path
+                )
+            ) {
+                WithPerceptionTracking {
+                    ScrollView {
+                        LazyVStack(alignment: .leading) {
+                            WithPerceptionTracking {
+                                ForEach(store.stations) { station in
+                                    WithPerceptionTracking {
+                                        Text("Station")
+                                            .onTapGesture {
+                                                store.send(.details(station))
+                                            }
+                                    }
                                 }
+                            }
                         }
                     }
+                    /// Warning: iOS16.4 Support only
+                    .refreshable {
+                        store.send(.onRefresh)
+                    }
                 }
-                /// Warning: iOS16.4 Support only
-                .refreshable {
-                    store.send(.onRefresh)
+                .task {
+                    store.send(
+                        .onAppear
+                    )
                 }
-            }
-            .task {
-                store.send(
-                    .onAppear
-                )
-            }
-        } destination: { store in
-            switch store.case {
-            case let .detail (store):
-                StationDetailsView(
-                    store: store
-                )
+            } destination: { store in
+                switch store.case {
+                case let .detail (store):
+                    StationDetailsView(
+                        store: store
+                    )
+                }
             }
         }
     }

@@ -19,6 +19,10 @@ extension DependencyValues {
                 )
             )
         )
+
+        static let previewValue: ListStationsUseCase = ListStationsUseCaseMock(
+            stations: StationFeatureMock.stations
+        )
     }
 
     var listStationUseCase: ListStationsUseCase {

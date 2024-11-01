@@ -19,23 +19,26 @@ struct AppContainerView: View {
     }
 
     var body: some View {
-        TabView(
-            selection: $store.currentTab.sending(\.selectTab)
-        ) {
-            StationsView(
-                store: Store(
-                    initialState: .init()
-                ) {
-                    StationsFeature()
-                }
-            )
-            .tag(
-                AppContainer.Tab.stations
-            )
-            .tabItem {
-                VStack {
-                    Image(systemName: "music.note.house")
-                    Text("Stations")
+        WithPerceptionTracking {
+            TabView(
+                selection: $store.currentTab.sending(\.selectTab)
+            ) {
+                WithPerceptionTracking {
+                    StationsView(
+                        store: store.scope(
+                            state: \.stations,
+                            action: \.stations
+                        )
+                    )
+                    .tag(
+                        AppContainer.Tab.stations
+                    )
+                    .tabItem {
+                        VStack {
+                            Image(systemName: "music.note.house")
+                            Text("Stations")
+                        }
+                    }
                 }
             }
         }

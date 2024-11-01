@@ -413,7 +413,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyLittleRadio/Ressources/MyLittleRadio.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyLittleRadio/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "MyLittleRadio/Preview\\ Content/Clients/ListStationsUseCaseMock.swift MyLittleRadio/Preview\\ Content MyLittleRadio/Preview\\ Content/Features/StationsFeature/StationFeatureMock.swift";
 				DEVELOPMENT_TEAM = Y25WV52A96;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -454,7 +454,7 @@
 				CODE_SIGN_ENTITLEMENTS = MyLittleRadio/Ressources/MyLittleRadio.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"MyLittleRadio/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "MyLittleRadio/Preview\\ Content/Clients/ListStationsUseCaseMock.swift MyLittleRadio/Preview\\ Content MyLittleRadio/Preview\\ Content/Features/StationsFeature/StationFeatureMock.swift";
 				DEVELOPMENT_TEAM = Y25WV52A96;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
