@@ -1,5 +1,5 @@
 {
-  "originHash" : "85357392c05d68e5388e58cef319617565ca4d87aa2723c8e0687d78a52a4732",
+  "originHash" : "84d10f579c766bf5d1a1b2351a345f9e8f418740092fbaef4cd7c42612f0f306",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -7,6 +7,15 @@
       "location" : "https://github.com/pointfreeco/combine-schedulers",
       "state" : {
         "revision" : "9fa31f4403da54855f1e2aeaeff478f4f0e40b13",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swift-async-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-async-algorithms",
+      "state" : {
+        "revision" : "5c8bd186f48c16af0775972700626f0b74588278",
         "version" : "1.0.2"
       }
     },

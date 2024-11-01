@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		06AD012D2CC10D590093665F /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 06AD012C2CC10D590093665F /* ComposableArchitecture */; };
+		5131B9AE2CD5060E00D55728 /* AwesomePlayer in Frameworks */ = {isa = PBXBuildFile; productRef = 5131B9AD2CD5060E00D55728 /* AwesomePlayer */; };
 		51535F892CD383E900D48028 /* Requester in Frameworks */ = {isa = PBXBuildFile; productRef = 51535F882CD383E900D48028 /* Requester */; };
 		515360102CD3B50900D48028 /* Data in Frameworks */ = {isa = PBXBuildFile; productRef = 5153600F2CD3B50900D48028 /* Data */; };
 		515360132CD3B51C00D48028 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 515360122CD3B51C00D48028 /* Domain */; };
@@ -64,6 +65,7 @@
 				51535F892CD383E900D48028 /* Requester in Frameworks */,
 				515360132CD3B51C00D48028 /* Domain in Frameworks */,
 				515360102CD3B50900D48028 /* Data in Frameworks */,
+				5131B9AE2CD5060E00D55728 /* AwesomePlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -129,6 +131,7 @@
 				51535F882CD383E900D48028 /* Requester */,
 				5153600F2CD3B50900D48028 /* Data */,
 				515360122CD3B51C00D48028 /* Domain */,
+				5131B9AD2CD5060E00D55728 /* AwesomePlayer */,
 			);
 			productName = MyLittleRadio;
 			productReference = 06AD00FD2CC10D020093665F /* MyLittleRadio.app */;
@@ -216,6 +219,7 @@
 				06AD012B2CC10D590093665F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 				5153600E2CD3B50900D48028 /* XCLocalSwiftPackageReference "Data" */,
 				515360112CD3B51C00D48028 /* XCLocalSwiftPackageReference "Domain" */,
+				5131B9AC2CD5060E00D55728 /* XCLocalSwiftPackageReference "AwesomePlayer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 06AD00FE2CC10D020093665F /* Products */;
@@ -619,6 +623,10 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
+		5131B9AC2CD5060E00D55728 /* XCLocalSwiftPackageReference "AwesomePlayer" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AwesomePlayer;
+		};
 		5153600E2CD3B50900D48028 /* XCLocalSwiftPackageReference "Data" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = Data;
@@ -645,6 +653,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 06AD012B2CC10D590093665F /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
 			productName = ComposableArchitecture;
+		};
+		5131B9AD2CD5060E00D55728 /* AwesomePlayer */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AwesomePlayer;
 		};
 		51535F882CD383E900D48028 /* Requester */ = {
 			isa = XCSwiftPackageProductDependency;

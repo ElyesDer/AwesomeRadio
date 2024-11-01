@@ -8,10 +8,10 @@
 import Foundation
 import AVFoundation
 
-public final class AVFRQueuePlayer: AVQueuePlayer, AudioPlayback {
+final class AVFRQueuePlayer: AVQueuePlayer, AudioPlayback {
 
     nonisolated
-    public func insert(_ item: AudioItem) {
+    func insert(_ item: AudioItem) {
         super.insert(
             item.getAVPlayerItem(),
             after: items().last
@@ -19,11 +19,11 @@ public final class AVFRQueuePlayer: AVQueuePlayer, AudioPlayback {
     }
 
     nonisolated
-    public func itemsCount() -> Int {
+    func itemsCount() -> Int {
         super.items().count
     }
 
-    public func adjustVolume(to value: Float) async {
+    func adjustVolume(to value: Float) async {
         volume = value
     }
 }
