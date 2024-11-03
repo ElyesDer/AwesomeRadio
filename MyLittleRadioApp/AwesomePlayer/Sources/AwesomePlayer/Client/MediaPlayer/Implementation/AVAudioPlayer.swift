@@ -81,6 +81,7 @@ public actor AwesomeMediaPlayer: MediaPlayer {
         await audioPlayer.insert(
             item
         )
+        await audioPlayer.play()
     }
 
     public func playNext() async {

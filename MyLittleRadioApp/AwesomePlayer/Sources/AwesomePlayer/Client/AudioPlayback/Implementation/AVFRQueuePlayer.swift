@@ -132,7 +132,7 @@ public final class AVFRQueuePlayer: AVQueuePlayer, @preconcurrency AudioPlayback
             currentPlayingItemSubject.send(nil)
             return
         }
-        let foundItem = queuedItems.first { $0.url == currentItemURL }
+        let foundItem = queuedItems.first { $0.streamUrl == currentItemURL }
         currentPlayingItemSubject.send(foundItem)
     }
 
@@ -143,6 +143,6 @@ public final class AVFRQueuePlayer: AVQueuePlayer, @preconcurrency AudioPlayback
 
 fileprivate extension AudioItem {
     var playerItem: AVPlayerItem {
-        return AVPlayerItem(url: url)
+        return AVPlayerItem(url: streamUrl)
     }
 }

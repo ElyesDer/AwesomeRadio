@@ -9,43 +9,27 @@ import Foundation
 import ComposableArchitecture
 import AwesomePlayer
 
-// Handle Player and Global State
 @Reducer
 struct AppContainer {
-
-    enum Tab {
-        case stations, settings
-    }
-
     @ObservableState
     struct State: Equatable {
-        var currentTab: Tab = .stations
         var stations: StationsFeature.State = .init()
 
-        // Player should be SharedState
-        // remove this mock
-        var awesomePlayer: AwesomePlayer.State = .init(
-            playingList: [ AudioItem(
-                id: .init(),
-                url: URL(
-                    string: "https://icecast.radiofrance.fr/franceinter-midfi.mp3"
-                )!,
-                mainLabel: "France Inter Radio Station",
-                secondaryLabel: "France Inter Radio Station, Programme du matin et soir à écouter sur notre radio",
-                coverURL: URL(
-                    string: "https://www.radiofrance.fr/s3/cruiser-production/2022/05/480e3b05-9cd6-4fb3-aa4f-6d60964c70b7/1000x1000_squareimage_francemusique_v2.jpg"
-                )!,
-                primaryHexColor: "#e20134",
-                isLive: false // wat is this ?
-            )]
-        )
+        var isPlayerVisible: Bool {
+            awesomePlayer.isViewable
+        }
+
+        var awesomePlayer: AwesomePlayer.State = .init()
     }
 
     @CasePathable
     enum Action {
-        case stations(StationsFeature.Action)
-        case selectTab(Tab)
+        enum PlayerActionType {
+            case addQueue
+            case play
+        }
 
+        case stations(StationsFeature.Action)
         case awesomePlayer(AwesomePlayer.Action)
     }
 
@@ -67,9 +51,77 @@ struct AppContainer {
 
         Reduce { state, action in
             switch action {
-            case let .selectTab(tab):
-                state.currentTab = tab
-                return .none
+
+            case let .stations(
+                .path(
+                    .element(
+                        id: id,
+                        action: StationsFeature.Path.Action.detail(StationDetails.Action.addToQueue)
+                    )
+                )
+            ):
+
+                guard let selectedState = state.stations.path[id: id, case: \.detail] else {
+                    return .none
+                }
+
+                return handlePlayerAction(
+                    action: Action.PlayerActionType.addQueue,
+                    using: selectedState
+                )
+
+            case let .stations(
+                .path(
+                    .element(
+                        id: id,
+                        action: StationsFeature.Path.Action.detail(StationDetails.Action.play)
+                    )
+                )
+            ):
+
+                guard let selectedState = state.stations.path[id: id, case: \.detail] else {
+                    return .none
+                }
+
+                return handlePlayerAction(
+                    action: Action.PlayerActionType.play,
+                    using: selectedState
+                )
+
+            case let .stations(
+                .stations(
+                    .element(
+                        id: id,
+                        action: StationDetails.Action.addToQueue
+                    )
+                )
+            ):
+
+                guard let selectedState: StationDetails.State = state.stations.stations[id: id] else {
+                    return .none
+                }
+
+                return handlePlayerAction(
+                    action: Action.PlayerActionType.addQueue,
+                    using: selectedState
+                )
+
+            case let .stations(
+                .stations(
+                    .element(
+                        id: id,
+                        action: StationDetails.Action.play
+                    )
+                )
+            ):
+                guard let selectedState: StationDetails.State = state.stations.stations[id: id] else {
+                    return .none
+                }
+
+                return handlePlayerAction(
+                    action: Action.PlayerActionType.play,
+                    using: selectedState
+                )
 
             case .stations:
                 return .none
@@ -77,6 +129,50 @@ struct AppContainer {
             case .awesomePlayer:
                 return .none
             }
+        }
+    }
+
+    private func handlePlayerAction(
+        action: Action.PlayerActionType,
+        using selectedState: StationDetails.State
+    ) -> Effect<Action> {
+
+        guard let streamURL: URL = URL(
+            string: selectedState.station.streamURL
+        ) else {
+            return .none
+        }
+
+        // instantiate Audio Item
+        let audioItem: AudioItem = .init(
+            id: selectedState.id,
+            streamUrl: streamURL,
+            mainLabel: selectedState.station.title,
+            secondaryLabel: selectedState.station.shortTitle,
+            coverURL: .init(
+                string: selectedState.station.squareImageURL ?? ""
+            ),
+            primaryHexColor: selectedState.station.primaryColor,
+            isTimeShiftable: selectedState.station.hasTimeshift
+        )
+
+        switch action {
+        case .addQueue:
+            return .send(
+                .awesomePlayer(
+                    AwesomePlayer.Action.addToQueue(
+                        audioItem
+                    )
+                )
+            )
+        case .play:
+            return .send(
+                .awesomePlayer(
+                    AwesomePlayer.Action.play(
+                        audioItem
+                    )
+                )
+            )
         }
     }
 }

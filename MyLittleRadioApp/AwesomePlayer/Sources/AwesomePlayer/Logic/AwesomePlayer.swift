@@ -19,6 +19,9 @@ public struct AwesomePlayer {
     @ObservableState
     public struct State: Equatable {
 
+        public var isViewable: Bool {
+            playingList.isEmpty == false || currentItem != nil
+        }
         var isExpanded: Bool
         var isWaitingListShown: Bool
         var playingList: [AudioItem]
@@ -98,7 +101,9 @@ public struct AwesomePlayer {
                 
             case .onAppear:
                 return .merge(
-                    setupPlayerList(itemList: state.playingList),
+                    setupPlayerList(
+                        itemList: state.playingList
+                    ),
                     subscribeToPlayerStatus(),
                     subscribeToPlayerProgress(),
                     subscribeToPlayerCurrentItem()
@@ -128,6 +133,7 @@ public struct AwesomePlayer {
                 return .none
                 
             case let .play(audioItem):
+                state.currentItem = audioItem
                 return .run { [mediaPlayer] _ in
                     await mediaPlayer.play(item: audioItem)
                 }
@@ -144,23 +150,25 @@ public struct AwesomePlayer {
                     await mediaPlayer.stop()
                 }
             case let .addToQueue(audioItem):
+                state.playingList.append(audioItem)
                 return .run { [mediaPlayer] _ in
                     await mediaPlayer.addToQueue(
                         item: audioItem
                     )
                 }
-
+                
                 // MARK: Observers
                 
             case let .playerStatusUpdate(status):
                 state.playerStatus = status
                 return .none
-
+                
             case let .playerProgressUpdate(playingItem):
                 state.progress = playingItem
-
+                
                 if let playingItem {
-                    if let duration = playingItem.duration, duration > 0 {
+                    if let duration = playingItem.duration,
+                       duration > 0 {
                         state.currentProgress = playingItem.current / duration
                     } else {
                         state.currentProgress = 1

@@ -37,7 +37,9 @@ struct FilterView: View {
                                     cornerRadius: 8
                                 )
                                 .foregroundColor(
-                                    filter == store.selectedFilter ? .primary : Color.black.opacity(0.6)
+                                    filter == store.selectedFilter ? store.selectedFilter?.selectedColor : Color
+                                        .black
+                                        .opacity(0.6)
                                 )
                             )
                             .onTapGesture {
@@ -80,6 +82,19 @@ extension StationFilter {
             "music.note"
         case .locale:
             "flag"
+        }
+    }
+
+    var selectedColor: Color {
+        switch self {
+        case .timeShift:
+                .red
+        case .onAir:
+                .blue
+        case .musical:
+                .cyan
+        case .locale:
+                .green
         }
     }
 }

@@ -21,22 +21,22 @@ enum AudioItemStub {
     }
 
     static func generate(
-        id: UUID = UUID(),
-        url: URL = URL(string: "http://")!,
+        id: String = UUID().uuidString,
+        streamUrl: URL = URL(string: "http://")!,
         mainLabel: String = "mainLabel",
         secondaryLabel: String = "secondaryLabel",
         coverURL: URL = URL(string: "http://")!,
         primaryHexColor: String = "",
-        isLive: Bool = Bool.random()
+        isTimeShiftable: Bool = Bool.random()
     ) -> AudioItem {
         AudioItem(
             id: id,
-            url: url,
+            streamUrl: streamUrl,
             mainLabel: mainLabel,
             secondaryLabel: secondaryLabel,
             coverURL: coverURL,
             primaryHexColor: primaryHexColor,
-            isLive: isLive
+            isTimeShiftable: isTimeShiftable
         )
     }
 }

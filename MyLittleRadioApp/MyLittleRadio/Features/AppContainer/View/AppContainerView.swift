@@ -21,36 +21,23 @@ struct AppContainerView: View {
 
     var body: some View {
         WithPerceptionTracking {
-            TabView(
-                selection: $store.currentTab.sending(\.selectTab)
-            ) {
-                WithPerceptionTracking {
-                    StationsView(
-                        store: store.scope(
-                            state: \.stations,
-                            action: \.stations
-                        )
-                    )
-                    .tag(
-                        AppContainer.Tab.stations
-                    )
-                    .tabItem {
-                        VStack {
-                            Image(systemName: "music.note.house")
-                            Text("Stations")
-                        }
-                    }
-                }
-            }
+            StationsView(
+                store: store.scope(
+                    state: \.stations,
+                    action: \.stations
+                )
+            )
         }
         .safeAreaInset(edge: .bottom) {
             WithPerceptionTracking {
-                AwesomePlayerView(
-                    store: store.scope(
-                        state: \.awesomePlayer,
-                        action: \.awesomePlayer
+                if store.isPlayerVisible {
+                    AwesomePlayerView(
+                        store: store.scope(
+                            state: \.awesomePlayer,
+                            action: \.awesomePlayer
+                        )
                     )
-                )
+                }
             }
         }
     }

@@ -31,10 +31,11 @@ struct StationDetails {
 
         case onAppear
 
-        // Go To Station Details
+        // MARK: Action
+        
         case onTap
-
         case play
+        case addToQueue
     }
 
     var body: some Reducer<State, Action> {

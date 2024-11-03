@@ -53,6 +53,22 @@ struct StationCardView: View {
                             }
                         }
                     }
+                    .overlay(alignment: .topTrailing) {
+                        Image(
+                            systemName: "text.append"
+                        )
+                        .padding(6)
+                        .background(
+                            RoundedRectangle(
+                                cornerRadius: 8
+                            )
+                            .fill(Color.gray.opacity(0.5))
+                        )
+                        .padding(4)
+                        .onTapGesture {
+                            store.send(.addToQueue)
+                        }
+                    }
                 }
             } actionView: {
                 Image(

@@ -9,30 +9,30 @@ import Combine
 import AsyncAlgorithms
 
 public struct AudioItem: Sendable, Identifiable, Hashable, Equatable {
-    public let id: UUID
-    public let url: URL
+    public let id: String
+    public let streamUrl: URL
     public let mainLabel: String
     public let secondaryLabel: String
-    public let coverURL: URL
+    public let coverURL: URL?
     public let primaryHexColor: String
-    public let isLive: Bool
+    public let isTimeShiftable: Bool
 
     public init(
-        id: UUID,
-        url: URL,
+        id: String,
+        streamUrl: URL,
         mainLabel: String,
         secondaryLabel: String,
-        coverURL: URL,
+        coverURL: URL?,
         primaryHexColor: String,
-        isLive: Bool
+        isTimeShiftable: Bool
     ) {
         self.id = id
-        self.url = url
+        self.streamUrl = streamUrl
         self.mainLabel = mainLabel
         self.secondaryLabel = secondaryLabel
         self.coverURL = coverURL
         self.primaryHexColor = primaryHexColor
-        self.isLive = isLive
+        self.isTimeShiftable = isTimeShiftable
     }
 }
 

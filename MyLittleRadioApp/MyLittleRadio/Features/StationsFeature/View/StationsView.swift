@@ -65,7 +65,10 @@ struct StationsView: View {
     @ViewBuilder
     private func BodyView() -> some View {
         VStack(alignment: .leading) {
-            LazyVStack(alignment: .center) {
+            LazyVStack(
+                alignment: .center,
+                spacing: 16
+            ) {
                 WithPerceptionTracking {
                     ForEach(
                         store.scope(
@@ -77,11 +80,15 @@ struct StationsView: View {
                             StationCardView(
                                 store: store
                             )
+                            .onTapGesture {
+                                store.send(.play)
+                            }
                         }
                     }
                 }
             }
             .padding()
+            .padding(.bottom, 50)
         }
     }
 }

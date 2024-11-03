@@ -54,6 +54,9 @@ struct StationDetailsView: View {
                             alignment: .center
                         )
                         .padding()
+                        .onTapGesture {
+                            store.send(.play)
+                        }
                     }
 
                     Spacer()

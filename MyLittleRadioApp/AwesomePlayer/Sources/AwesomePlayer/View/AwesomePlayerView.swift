@@ -170,12 +170,12 @@ public struct AwesomePlayerView: View {
                     tint: themeColor
                 )
                 .frame(height: 4, alignment: .bottom)
+                .disabled(store.currentItem?.isTimeShiftable ?? false)
                 .matchedGeometryEffect(
                     id: "PlayerProgress",
                     in: animation
                 )
             }
-
             .frame(
                 height: max(
                     60,
@@ -382,7 +382,7 @@ public struct AwesomePlayerView: View {
     @ViewBuilder
     private func WaitingList() -> some View {
         ScrollView {
-            VStack {
+            VStack(alignment: .leading) {
                 WithPerceptionTracking {
                     ForEach(store.playingList, id: \.self) { item in
                         StationRow(
@@ -395,6 +395,7 @@ public struct AwesomePlayerView: View {
                     }
                 }
             }
+            .padding(6)
         }
     }
 
@@ -412,6 +413,7 @@ public struct AwesomePlayerView: View {
 
             Text("Add Stations to Your Waiting List")
         }
+        .padding()
     }
 
     /// Player View (containing all the song information with playback controls)
@@ -465,7 +467,7 @@ public struct AwesomePlayerView: View {
                             Spacer(minLength: 0)
 
                             // TODO: use correct formatting
-                            Text(store.currentProgress.description)
+                            Text("live")
                                 .font(.caption)
                                 .foregroundColor(.gray)
                         }
@@ -507,7 +509,9 @@ public struct AwesomePlayerView: View {
                                         size: 28
                                     )
                                 )
+                                .foregroundStyle(Color.gray)
                         }
+                        .disabled(true)
 
                         Button(action: {
                             store.send(.togglePlayer())
@@ -659,7 +663,7 @@ public struct AwesomePlayerView: View {
                     isExpanded: true,
                     playingList: [ AudioItem(
                         id: .init(),
-                        url: URL(
+                        streamUrl: URL(
                             string:
                                 "https://icecast.radiofrance.fr/franceinter-midfi.mp3"
                         )!,
@@ -670,7 +674,7 @@ public struct AwesomePlayerView: View {
                                 "https://www.radiofrance.fr/s3/cruiser-production/2022/05/480e3b05-9cd6-4fb3-aa4f-6d60964c70b7/1000x1000_squareimage_francemusique_v2.jpg"
                         )!,
                         primaryHexColor: "#e20134",
-                        isLive: false
+                        isTimeShiftable: false
                     )]
                 ),
                 reducer: {
