@@ -7,28 +7,52 @@
 
 import SwiftUI
 
-struct FullWidthCard<Content: View>: View {
+struct FullWidthCard<
+    Content: View,
+    ActionContent: View
+>: View {
 
     var title: String
     var subtitle: String
-    var backgroundView: () -> Content
+    var BackgroundView: () -> Content
+    var ActionView: () -> ActionContent
+
+    init(
+        title: String,
+        subtitle: String,
+        @ViewBuilder background: @escaping () -> Content,
+        @ViewBuilder actionView: @escaping () -> ActionContent
+    ) {
+        self.title = title
+        self.subtitle = subtitle
+        self.BackgroundView = background
+        self.ActionView = actionView
+    }
 
     var body: some View {
         ZStack (alignment: .bottomLeading) {
 
-            backgroundView()
+            BackgroundView()
 
             VStack(alignment: .leading) {
                 Spacer()
 
-                VStack(alignment: .leading) {
-                    Text(title)
-                        .foregroundColor(.white)
-                        .font(.headline)
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(title)
+                            .foregroundColor(.white)
+                            .font(.headline)
 
-                    Text(subtitle)
-                        .foregroundColor(.white)
-                        .font(.subheadline)
+                        Text(subtitle)
+                            .foregroundColor(.white)
+                            .font(.subheadline)
+                    }
+                    .padding(.horizontal, 8)
+
+                    Spacer()
+
+                    ActionView()
+
                 }
                 .frame(
                     maxWidth: .infinity,
@@ -38,7 +62,7 @@ struct FullWidthCard<Content: View>: View {
                 .background(
                     Color
                         .gray
-                        .opacity(0.8)
+                        .opacity(0.7)
                 )
             }
         }
@@ -54,5 +78,10 @@ struct FullWidthCard<Content: View>: View {
         subtitle: "Sub title"
     ) {
         Color.red
+    } actionView: {
+        Image(
+            systemName: "play"
+        )
+        .padding(.horizontal)
     }
 }

@@ -54,6 +54,15 @@ struct StationCardView: View {
                         }
                     }
                 }
+            } actionView: {
+                Image(
+                    systemName: "play.circle.fill"
+                )
+                .font(.system(size: 30))
+                .padding(.horizontal)
+                .onTapGesture {
+                    store.send(.play)
+                }
             }
             .onTapGesture {
                 store.send(.onTap)

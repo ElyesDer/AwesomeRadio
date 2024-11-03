@@ -33,6 +33,8 @@ struct StationDetails {
 
         // Go To Station Details
         case onTap
+
+        case play
     }
 
     var body: some Reducer<State, Action> {
