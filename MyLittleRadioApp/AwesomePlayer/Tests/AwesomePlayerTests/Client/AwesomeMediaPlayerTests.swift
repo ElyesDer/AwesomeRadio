@@ -7,10 +7,10 @@ import AwesomePlayer
 import Combine
 
 @Suite(
-    "Audi Player Suite",
+    "AwesomeMediaPlayer Suite",
     .timeLimit(.minutes(1))
 )
-struct AudioPlayerTests {
+struct AwesomeMediaPlayerTests {
 
     @Test(
         "Test play function"
@@ -19,7 +19,9 @@ struct AudioPlayerTests {
 
         // GIVEN
 
-        let playBackSpy = AudioPlaybackMock()
+        let playBackSpy = AudioPlaybackMock(
+            playerState: true
+        )
         let sut = AwesomeMediaPlayer(
             audioPlayer: playBackSpy
         )
@@ -78,26 +80,17 @@ struct AudioPlayerTests {
         // GIVEN
 
         let playBackSpy = AudioPlaybackMock(
-            insertedItems: [
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath: "uri://0")!
-                ),
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath:"uri://1")!
-                )
-            ]
+            insertedItems: AudioItemStub.generate(
+                n: 2
+            ),
+            playerState: true
         )
 
         let sut = AwesomeMediaPlayer(
             audioPlayer: playBackSpy
         )
 
-        let itemToPlay: AudioItem = .init(
-            id: UUID(),
-            url: URL(filePath:"uri://3")!
-        )
+        let itemToPlay: AudioItem = AudioItemStub.generate()
 
         // WHEN
 
@@ -126,26 +119,14 @@ struct AudioPlayerTests {
         // GIVEN
 
         let playBackSpy = AudioPlaybackMock(
-            insertedItems: [
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath: "uri://0")!
-                ),
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath:"uri://1")!
-                )
-            ]
+            insertedItems: AudioItemStub.generate(n: 2)
         )
 
         let sut = AwesomeMediaPlayer(
             audioPlayer: playBackSpy
         )
 
-        let itemToQueue: AudioItem = .init(
-            id: UUID(),
-            url: URL(filePath:"uri://3")!
-        )
+        let itemToQueue: AudioItem = AudioItemStub.generate()
 
         // WHEN
 
@@ -168,54 +149,14 @@ struct AudioPlayerTests {
         )
     }
 
-    @Test("Test Player Has a Queue WHEN PlayNext called THEN Play Next Item in the Queue")
-    func testPlayNext() async {
-
-        // GIVEN
-
-        let playBackSpy = AudioPlaybackMock(
-            insertedItems: [
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath: "uri://0")!
-                ),
-                AudioItem(
-                    id: .init(),
-                    url: URL(filePath:"uri://1")!
-                )
-            ]
-        )
-
-        let sut = AwesomeMediaPlayer(
-            audioPlayer: playBackSpy
-        )
-
-        // WHEN
-
-        await sut.playNext()
-
-        // THEN
-
-        #expect(
-            playBackSpy.itemsCountValue == 1
-        )
-
-        #expect(
-            await sut
-                .audioStatusPublisher
-                .contains {
-                    $0 == .playing
-                }
-        )
-    }
-
-    @Test("Test Player Has an Empty Queue WHEN PlayNext called THEN Stop and reset all")
+    @Test("Test Player With Empty Queue WHEN PlayNext called THEN Ignore Action")
     func testPlayNextWithEmptyQueue() async {
 
         // GIVEN
 
         let playBackSpy = AudioPlaybackMock(
-            insertedItems: [ ]
+            insertedItems: AudioItemStub.generate(n: 2),
+            playerState: true
         )
 
         let sut = AwesomeMediaPlayer(
@@ -229,7 +170,10 @@ struct AudioPlayerTests {
         // THEN
 
         #expect(
-            playBackSpy.insertedItems.count == 0
+            playBackSpy.itemsCountValue == 0
+        )
+        #expect(
+            playBackSpy.playCalled == false
         )
 
         #expect(

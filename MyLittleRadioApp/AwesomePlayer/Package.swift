@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "AwesomePlayer",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
         .macOS(.v12),
     ],
     products: [
@@ -19,6 +19,10 @@ let package = Package(
         .package(
             url: "https://github.com/apple/swift-async-algorithms",
             from: "1.0.0"
+        ),
+        .package(
+            url: "https://github.com/pointfreeco/swift-composable-architecture.git",
+            from: "1.15.0"
         )
     ],
     targets: [
@@ -30,7 +34,12 @@ let package = Package(
                 .product(
                     name: "AsyncAlgorithms",
                     package: "swift-async-algorithms"
+                ),
+                .product(
+                    name: "ComposableArchitecture",
+                    package: "swift-composable-architecture"
                 )
+
             ],
             swiftSettings: [
                 .enableExperimentalFeature("StrictConcurrency")
@@ -43,6 +52,10 @@ let package = Package(
                 .product(
                     name: "AsyncAlgorithms",
                     package: "swift-async-algorithms"
+                ),
+                .product(
+                    name: "ComposableArchitecture",
+                    package: "swift-composable-architecture"
                 )
             ]
         )

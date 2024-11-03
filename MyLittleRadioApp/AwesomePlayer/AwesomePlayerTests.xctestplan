@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "743A573C-0449-4B94-AC7B-81DD5CAC6FE9",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AwesomePlayerTests",
+        "name" : "AwesomePlayerTests"
+      }
+    }
+  ],
+  "version" : 1
+}
