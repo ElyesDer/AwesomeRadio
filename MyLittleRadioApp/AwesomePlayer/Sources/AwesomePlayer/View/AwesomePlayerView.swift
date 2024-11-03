@@ -275,11 +275,11 @@ public struct AwesomePlayerView: View {
     private func ExpandedPlayer() -> some View {
         GeometryReader { reader in
             WithPerceptionTracking {
-                VStack {
+                VStack(spacing: 4) {
                     Capsule()
                         .fill(.gray)
                         .frame(width: 40, height: 5)
-                        .padding(.top, 4)
+                        .padding(.top, 2)
 
                     HStack(alignment: .top) {
                         Text("Now Playing")
@@ -301,8 +301,15 @@ public struct AwesomePlayerView: View {
                         }
                     }
 
-                    let layout = isPortrait ? AnyLayout(VStackLayout())
-                    : AnyLayout(HStackLayout())
+                    let layout = isPortrait ? AnyLayout(
+                        VStackLayout(
+                            spacing: 2
+                        )
+                    ) : AnyLayout(
+                        HStackLayout(
+                            spacing: 4
+                        )
+                    )
 
                     layout {
                         Group {
@@ -466,7 +473,6 @@ public struct AwesomePlayerView: View {
 
                             Spacer(minLength: 0)
 
-                            // TODO: use correct formatting
                             Text("live")
                                 .font(.caption)
                                 .foregroundColor(.gray)
@@ -477,8 +483,7 @@ public struct AwesomePlayerView: View {
                         alignment: .top
                     )
 
-                    HStack(spacing: 16) {
-
+                    HStack(spacing: 10) {
                         Button {
                             store.send(
                                 .set(

@@ -8,6 +8,14 @@ struct StationsView: View {
     @Perception.Bindable
     private var store: StoreOf<StationsFeature>
 
+    private let adaptiveColumn = [
+        GridItem(
+            .adaptive(
+                minimum: 300
+            )
+        )
+    ]
+
     init(store: StoreOf<StationsFeature>) {
         self.store = store
     }
@@ -76,9 +84,9 @@ struct StationsView: View {
     @ViewBuilder
     private func BodyView() -> some View {
         VStack(alignment: .leading) {
-            LazyVStack(
-                alignment: .center,
-                spacing: 16
+            LazyVGrid(
+                columns: adaptiveColumn,
+                spacing: 20
             ) {
                 WithPerceptionTracking {
                     ForEach(
