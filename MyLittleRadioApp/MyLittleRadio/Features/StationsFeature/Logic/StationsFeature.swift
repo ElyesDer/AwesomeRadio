@@ -70,10 +70,13 @@ struct StationsFeature {
         case setFilters([StationFilter])
 
         // MARK: Navigation
+
         case details(StationDetails.State)
         case path(StackActionOf<Path>)
 
         // MARK: Features
+
+        case stations(IdentifiedActionOf<StationDetails>)
         case stationFilter(Filters.Action)
     }
 
@@ -92,23 +95,25 @@ struct StationsFeature {
     }
 
     var body: some Reducer<State, Action> {
-        Reduce { state, action in
+        Reduce {
+            state,
+            action in
             switch action {
-                
+
                 // MARK: ViewLifecycle
-                
+
             case .onAppear:
                 return .send(.fetchStations)
-                
+
                 // MARK: User Initiated Actions
             case .onRefresh:
                 return .send(.fetchStations)
-                
+
                 // MARK: Handlers
-                
+
             case .fetchStations:
                 return loadStations()
-                
+
             case let .setStations(.success(metadata)):
                 state.viewState = .idle
                 state.stations = IdentifiedArrayOf(
@@ -153,13 +158,30 @@ struct StationsFeature {
 
             case .stationFilter:
                 return .none
+
+            case let .stations(.element(id: id, action: .onTap)):
+                guard let selectedState: StationDetails.State = state.stations[id: id] else {
+                    return .none
+                }
+                return .send(.details(selectedState))
+            case .stations:
+                return .none
             }
         }
         .forEach(
             \.path,
              action: \.path
         )
-        .ifLet(\.stationFilter, action: \.stationFilter) {
+        .forEach(
+            \.stations,
+             action: \.stations
+        ) {
+            StationDetails()
+        }
+        .ifLet(
+            \.stationFilter,
+             action: \.stationFilter
+        ) {
             Filters()
         }
     }

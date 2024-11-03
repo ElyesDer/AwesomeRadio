@@ -30,6 +30,9 @@ struct StationDetails {
         // MARK: ViewLifecycle
 
         case onAppear
+
+        // Go To Station Details
+        case onTap
     }
 
     var body: some Reducer<State, Action> {

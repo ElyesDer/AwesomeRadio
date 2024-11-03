@@ -20,7 +20,7 @@ struct FilterView: View {
     }
 
     var body: some View {
-        ScrollView {
+        ScrollView(.horizontal) {
             HStack {
                 WithPerceptionTracking {
                     ForEach(store.filters, id: \.self) { filter in
@@ -41,12 +41,16 @@ struct FilterView: View {
                                 )
                             )
                             .onTapGesture {
-                                store.send(.onTap(filter))
+                                store.send(
+                                    .onTap(filter),
+                                    animation: .easeInOut
+                                )
                             }
                         }
                     }
                 }
             }
+            .padding(.horizontal)
         }
     }
 }

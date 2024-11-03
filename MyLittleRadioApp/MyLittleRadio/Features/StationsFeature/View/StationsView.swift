@@ -21,7 +21,7 @@ struct StationsView: View {
                 )
             ) {
                 WithPerceptionTracking {
-                    VStack {
+                    VStack(alignment: .leading) {
                         if let store = store.scope(
                             state: \.stationFilter,
                             action: \.stationFilter
@@ -33,38 +33,55 @@ struct StationsView: View {
                         }
 
                         ScrollView {
-                            LazyVStack(alignment: .leading) {
-                                WithPerceptionTracking {
-                                    ForEach(store.feed) { station in
-                                        WithPerceptionTracking {
-                                            Text("station.title")
-                                                .onTapGesture {
-                                                    store.send(.details(station))
-                                                }
-                                        }
-                                    }
-                                }
-                            }
+                            BodyView()
                         }
                         /// Warning: iOS16.4 Support only
                         .refreshable {
                             store.send(.onRefresh)
                         }
                     }
+                    .padding(4)
                 }
+                .navigationTitle("Morning")
+                .navigationBarTitleDisplayMode(.large)
                 .task {
                     store.send(
                         .onAppear
                     )
                 }
             } destination: { store in
-                switch store.case {
-                case let .detail (store):
-                    StationDetailsView(
-                        store: store
-                    )
+                WithPerceptionTracking {
+                    switch store.case {
+                    case let .detail (store):
+                        StationDetailsView(
+                            store: store
+                        )
+                    }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private func BodyView() -> some View {
+        VStack(alignment: .leading) {
+            LazyVStack(alignment: .center) {
+                WithPerceptionTracking {
+                    ForEach(
+                        store.scope(
+                            state: \.feed,
+                            action: \.stations
+                        )
+                    ) { store in
+                        WithPerceptionTracking {
+                            StationCardView(
+                                store: store
+                            )
+                        }
+                    }
+                }
+            }
+            .padding()
         }
     }
 }
