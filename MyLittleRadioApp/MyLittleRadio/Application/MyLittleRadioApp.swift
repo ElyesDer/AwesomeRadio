@@ -7,13 +7,15 @@ import ComposableArchitecture
 struct MyLittleRadioApp: App {
     var body: some Scene {
         WindowGroup {
-            AppContainerView(
-                store: Store(
-                    initialState: .init()
-                ) {
-                    AppContainer()
-                }
-            )
+            WithPerceptionTracking {
+                AppContainerView(
+                    store: Store(
+                        initialState: .init()
+                    ) {
+                        AppContainer()
+                    }
+                )
+            }
         }
     }
 }

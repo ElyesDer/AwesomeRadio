@@ -60,7 +60,7 @@ public struct AwesomePlayer {
         case binding(BindingAction<State>)
 
         // MARK: Player Action
-        case play
+        case play(_ item: AudioItem)
         case playNext
         case pause
         case stop
@@ -127,9 +127,9 @@ public struct AwesomePlayer {
                 }
                 return .none
                 
-            case .play:
+            case let .play(audioItem):
                 return .run { [mediaPlayer] _ in
-                    await mediaPlayer.play()
+                    await mediaPlayer.play(item: audioItem)
                 }
             case .playNext:
                 return .run { [mediaPlayer] _ in

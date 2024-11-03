@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import Dependencies
+import AwesomePlayer
 
 struct AppContainerView: View {
 
@@ -43,7 +44,14 @@ struct AppContainerView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            Text("My Player")
+            WithPerceptionTracking {
+                AwesomePlayerView(
+                    store: store.scope(
+                        state: \.awesomePlayer,
+                        action: \.awesomePlayer
+                    )
+                )
+            }
         }
     }
 }

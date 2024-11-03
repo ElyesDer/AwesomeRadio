@@ -11,14 +11,26 @@ import ComposableArchitecture
 
 public struct AwesomePlayerView: View {
 
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+
+    // MARK: Private Properties
+
     @Perception.Bindable
     private var store: StoreOf<AwesomePlayer>
 
-    @Namespace private var animation
-    @State private var computedFrameHeight: CGFloat = .zero
+    @Namespace
+    private var animation
+
+    @State
+    private var computedFrameHeight: CGFloat = .zero
+
+    private var isPortrait: Bool {
+        horizontalSizeClass == .compact && verticalSizeClass == .regular
+    }
 
     // MARK: Computed Props
-    
+
     private var themeColor: Color {
         Color(
             hex: store.currentItem?.primaryHexColor ?? "#FFF"
@@ -217,7 +229,7 @@ public struct AwesomePlayerView: View {
                 image
                     .resizable()
                     .aspectRatio(
-                        contentMode: .fill
+                        contentMode: .fit
                     )
             },
             placeholder: {
@@ -251,6 +263,14 @@ public struct AwesomePlayerView: View {
         )
     }
 
+    private func computeCoverHeightRatio() -> CGFloat {
+        isPortrait ? 0.48 : 0.75
+    }
+
+    private func computePlayerHeightRatio() -> CGFloat {
+        isPortrait ? 0.42 : 0.7
+    }
+
     @ViewBuilder
     private func ExpandedPlayer() -> some View {
         GeometryReader { reader in
@@ -281,44 +301,48 @@ public struct AwesomePlayerView: View {
                         }
                     }
 
-                    Group {
-                        if store.isWaitingListShown {
-                            Group {
-                                if store.playingList.isEmpty {
-                                    Text(
-                                        "EMPTYVIEW - Make sure to add content to listen in the waiting list"
-                                    )
-                                } else {
-                                    ScrollView {
-                                        VStack {
-                                            WithPerceptionTracking {
-                                                ForEach(store.playingList, id: \.self) { item in
-                                                    Text("Item \(item)")
-                                                }
-                                            }
-                                        }
+                    let layout = isPortrait ? AnyLayout(VStackLayout())
+                    : AnyLayout(HStackLayout())
+
+                    layout {
+                        Group {
+                            if store.isWaitingListShown {
+                                Group {
+                                    if store.playingList.isEmpty {
+                                        EmptyWaitingList()
+                                    } else {
+                                        WaitingList()
                                     }
                                 }
+                                .padding(4)
+                                .background(themeColor)
+                                .clipShape(
+                                    RoundedRectangle(
+                                        cornerRadius: 15,
+                                        style: .continuous
+                                    )
+                                )
+                            } else {
+                                Cover()
                             }
-                        } else {
-                            Cover()
                         }
+                        .frame(
+                            height: reader.size.height * computeCoverHeightRatio()
+                        )
+
+                        Spacer(minLength: 24)
+
+                        PlayerView(
+                            reader.size
+                        )
+                        .padding(.bottom, 40)
+                        .frame(
+                            maxHeight: reader.size.height * computePlayerHeightRatio()
+                        )
                     }
-                    .frame(
-                        height: reader.size.height * 0.48
-                    )
-
-                    Spacer(minLength: 24)
-
-                    PlayerView(
-                        reader.size
-                    )
-                    .padding(.bottom, 40)
-                    .frame(
-                        maxHeight: reader.size.height * 0.42
-                    )
                 }
                 .padding(16)
+                .frame(maxHeight: .infinity)
                 .background(
                     UnevenRoundedRectangle(
                         cornerRadii: .init(
@@ -352,6 +376,41 @@ public struct AwesomePlayerView: View {
                         })
                 )
             }
+        }
+    }
+
+    @ViewBuilder
+    private func WaitingList() -> some View {
+        ScrollView {
+            VStack {
+                WithPerceptionTracking {
+                    ForEach(store.playingList, id: \.self) { item in
+                        StationRow(
+                            audioItem: item
+                        )
+                        .onTapGesture {
+                            store.send(.play(item))
+                        }
+                        Divider()
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func EmptyWaitingList() -> some View {
+        VStack {
+            Image(
+                systemName: "text.insert"
+            )
+            .font(
+                .system(
+                    size: 20
+                )
+            )
+
+            Text("Add Stations to Your Waiting List")
         }
     }
 
@@ -529,6 +588,7 @@ public struct AwesomePlayerView: View {
                                 Image(systemName: "heart")
                                     .font(.title2)
                             }
+                            .disabled(true)
 
                             VStack(spacing: 6) {
                                 Button {
@@ -537,9 +597,6 @@ public struct AwesomePlayerView: View {
                                     Image(systemName: "airpods.gen3")
                                         .font(.title2)
                                 }
-
-                                Text("Use AVFoundation")
-                                    .font(.caption)
                             }
 
                             Button {
@@ -599,6 +656,7 @@ public struct AwesomePlayerView: View {
         AwesomePlayerView(
             store: Store(
                 initialState: AwesomePlayer.State(
+                    isExpanded: true,
                     playingList: [ AudioItem(
                         id: .init(),
                         url: URL(
