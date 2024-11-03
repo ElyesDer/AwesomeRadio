@@ -21,26 +21,37 @@ struct StationsView: View {
                 )
             ) {
                 WithPerceptionTracking {
-                    VStack(alignment: .leading) {
-                        if let store = store.scope(
-                            state: \.stationFilter,
-                            action: \.stationFilter
+                    switch store.viewState {
+                    case .error(let message):
+                        VStack(
+                            alignment: .center,
+                            spacing: 8
                         ) {
-                            FilterView(
-                                store: store
-                            )
-                            .frame(height: 40)
+                            Text("Unable to load content with error")
+                            Text(message)
                         }
+                    default:
+                        VStack(alignment: .leading) {
+                            if let store = store.scope(
+                                state: \.stationFilter,
+                                action: \.stationFilter
+                            ) {
+                                FilterView(
+                                    store: store
+                                )
+                                .frame(height: 40)
+                            }
 
-                        ScrollView {
-                            BodyView()
+                            ScrollView {
+                                BodyView()
+                            }
+                            /// Warning: iOS16.4 Support only
+                            .refreshable {
+                                store.send(.onRefresh)
+                            }
                         }
-                        /// Warning: iOS16.4 Support only
-                        .refreshable {
-                            store.send(.onRefresh)
-                        }
+                        .padding(4)
                     }
-                    .padding(4)
                 }
                 .navigationTitle("Morning")
                 .navigationBarTitleDisplayMode(.large)
