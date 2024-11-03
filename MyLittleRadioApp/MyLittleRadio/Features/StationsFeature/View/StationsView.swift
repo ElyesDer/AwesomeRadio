@@ -21,23 +21,35 @@ struct StationsView: View {
                 )
             ) {
                 WithPerceptionTracking {
-                    ScrollView {
-                        LazyVStack(alignment: .leading) {
-                            WithPerceptionTracking {
-                                ForEach(store.stations) { station in
-                                    WithPerceptionTracking {
-                                        Text("Station")
-                                            .onTapGesture {
-                                                store.send(.details(station))
-                                            }
+                    VStack {
+                        if let store = store.scope(
+                            state: \.stationFilter,
+                            action: \.stationFilter
+                        ) {
+                            FilterView(
+                                store: store
+                            )
+                            .frame(height: 40)
+                        }
+
+                        ScrollView {
+                            LazyVStack(alignment: .leading) {
+                                WithPerceptionTracking {
+                                    ForEach(store.feed) { station in
+                                        WithPerceptionTracking {
+                                            Text("station.title")
+                                                .onTapGesture {
+                                                    store.send(.details(station))
+                                                }
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
-                    /// Warning: iOS16.4 Support only
-                    .refreshable {
-                        store.send(.onRefresh)
+                        /// Warning: iOS16.4 Support only
+                        .refreshable {
+                            store.send(.onRefresh)
+                        }
                     }
                 }
                 .task {

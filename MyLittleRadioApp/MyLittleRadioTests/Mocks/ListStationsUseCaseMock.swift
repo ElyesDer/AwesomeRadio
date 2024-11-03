@@ -8,15 +8,25 @@
 import Foundation
 import Domain
 
+// file dup
 struct ListStationsUseCaseMock: ListStationsUseCase {
-
-    let stations: [Station]
+    let metadata: StationMetadata
     let error: ListStationsUseCaseError?
 
     init(
         stations: [Station]
     ) {
-        self.stations = stations
+        self.metadata = .init(
+            stations: stations,
+            metaFilters: [:]
+        )
+        error = nil
+    }
+
+    init(
+        metadata: StationMetadata
+    ) {
+        self.metadata = metadata
         error = nil
     }
 
@@ -24,13 +34,16 @@ struct ListStationsUseCaseMock: ListStationsUseCase {
         error: ListStationsUseCaseError?
     ) {
         self.error = error
-        self.stations = []
+        self.metadata = .init(
+            stations: [],
+            metaFilters: [:]
+        )
     }
 
-    func execute() async throws(ListStationsUseCaseError) -> [Station] {
+    func execute() async throws(ListStationsUseCaseError) -> StationMetadata {
         if let error {
             throw error
         }
-        return stations
+        return metadata
     }
 }

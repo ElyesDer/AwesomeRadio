@@ -24,8 +24,32 @@ struct StationsFeature {
         }
 
         var stations: IdentifiedArrayOf<StationDetails.State> = []
-        var viewState: ViewState = .idle
+        var stationFilter: Filters.State?
 
+        var feed: IdentifiedArrayOf<StationDetails.State> {
+            switch stationFilter?.selectedFilter {
+            case .none:
+                stations
+            case .musical:
+                stations.filter {
+                    $0.station.isMusical
+                }
+            case .onAir:
+                stations.filter {
+                    $0.station.type == StationFilter.onAir.rawValue
+                }
+            case .timeShift:
+                stations.filter {
+                    $0.station.hasTimeshift
+                }
+            case .locale:
+                stations.filter {
+                    $0.station.type == StationFilter.locale.rawValue
+                }
+            }
+        }
+
+        var viewState: ViewState = .idle
         var path = StackState<Path.State>()
     }
 
@@ -42,12 +66,15 @@ struct StationsFeature {
         // MARK: Handlers
 
         case fetchStations
-        case setStations(Result<[Station], ListStationsUseCaseError>)
+        case setStations(Result<StationMetadata, ListStationsUseCaseError>)
+        case setFilters([StationFilter])
 
         // MARK: Navigation
         case details(StationDetails.State)
         case path(StackActionOf<Path>)
 
+        // MARK: Features
+        case stationFilter(Filters.Action)
     }
 
     // MARK: - Dependencies
@@ -82,13 +109,28 @@ struct StationsFeature {
             case .fetchStations:
                 return loadStations()
                 
-            case let .setStations(.success(stations)):
+            case let .setStations(.success(metadata)):
                 state.viewState = .idle
                 state.stations = IdentifiedArrayOf(
-                    uniqueElements: stations.map {
+                    uniqueElements: metadata.stations.map {
                         StationDetails.State.init(station: $0)
                     }
                 )
+                return loadFilters(
+                    with: metadata
+                )
+
+            case let .setFilters(filters):
+
+                guard filters.isEmpty == false else {
+                    state.stationFilter = nil
+                    return .none
+                }
+
+                state.stationFilter = Filters.State.init(
+                    filters: filters
+                )
+
                 return .none
 
                 // MARK: Error Handling
@@ -106,15 +148,37 @@ struct StationsFeature {
 
             case .path:
                 return .none
+
+                // MARK: Features
+
+            case .stationFilter:
+                return .none
             }
         }
         .forEach(
             \.path,
              action: \.path
         )
+        .ifLet(\.stationFilter, action: \.stationFilter) {
+            Filters()
+        }
     }
 
     // MARK: Private helpers
+
+    private func loadFilters(
+        with metadata: StationMetadata
+    ) -> Effect<Action> {
+
+        var filters = [StationFilter]()
+        metadata.metaFilters.forEach { key, value in
+            if value > 0, let filter = StationFilter(rawValue: key) {
+                filters.append(filter)
+            }
+        }
+
+        return .send(.setFilters(filters))
+    }
 
     private func loadStations() -> Effect<Action> {
         .run { send in

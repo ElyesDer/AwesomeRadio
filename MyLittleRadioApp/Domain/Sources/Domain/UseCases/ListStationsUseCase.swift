@@ -13,7 +13,7 @@ public enum ListStationsUseCaseError: Error {
 }
 
 public protocol ListStationsUseCase: Sendable {
-    func execute() async throws(ListStationsUseCaseError) -> [Station]
+    func execute() async throws(ListStationsUseCaseError) -> StationMetadata
 }
 
 public extension DomainFactory {

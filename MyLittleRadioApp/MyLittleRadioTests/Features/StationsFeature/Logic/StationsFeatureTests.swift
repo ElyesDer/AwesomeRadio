@@ -88,6 +88,8 @@ struct StationsFeatureTests {
 
         await store.receive(\.fetchStations)
         await store.receive(\.setStations.success)
+        await store.receive(\.setFilters, [])
+
     }
 
     @Test("WHEN onAppear THEN Fetch Radio List using UseCase")
@@ -109,6 +111,8 @@ struct StationsFeatureTests {
 
         await store.receive(\.fetchStations)
         await store.receive(\.setStations.success)
+        await store.receive(\.setFilters, [])
+
     }
 
     @Test("WHEN onAppear And Fetch Radio List with Error THEN Handle Error")

@@ -15,12 +15,31 @@ struct ListStationsUseCaseDefault: ListStationsUseCase {
         self.stationRepository = stationRepository
     }
 
-    func execute() async throws(ListStationsUseCaseError) -> [Station] {
+    func execute() async throws(ListStationsUseCaseError) -> StationMetadata {
+        let stations: [Station]
         do {
-            return try await stationRepository.fetchStations()
+            stations = try await stationRepository.fetchStations()
         } catch {
             // compute logic
             throw ListStationsUseCaseError.unableToLoadData
         }
+
+        var metaFilters: [String: Int] = [:]
+        for station in stations {
+            if station.hasTimeshift {
+                metaFilters["timeshift", default: 0] += 1
+            }
+
+            metaFilters[station.type, default: 0] += 1
+
+            if station.isMusical {
+                metaFilters["musical", default: 0] += 1
+            }
+        }
+
+        return StationMetadata(
+            stations: stations,
+            metaFilters: metaFilters
+        )
     }
 }

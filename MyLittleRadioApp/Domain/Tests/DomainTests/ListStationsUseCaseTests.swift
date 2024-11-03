@@ -24,19 +24,35 @@ struct ListStationsUseCaseTests {
         )
     }
 
-    @Test("GIVEN Successful Fetch THEN Returns Response")
-    func testGetSucessfullResult() async throws {
+    @Test("GIVEN Successful Fetch THEN Parse Metadata and Stations")
+    func testGetSuccessfulResult() async throws {
         // GIVEN
 
-        let repository: StationRepositoryMock = .init(data: [])
+        let repository: StationRepositoryMock = .init(
+            data: [
+                StationMock.generate(
+                    hasTimeshift: true,
+                    type: "on_air",
+                    isMusical: true
+                ),
+                StationMock.generate(
+                    hasTimeshift: false,
+                    type: "on_air",
+                    isMusical: false
+                )
+            ]
+        )
         let sut: ListStationsUseCaseDefault = .init(
             stationRepository: repository
         )
 
         // WHEN
-        let stations = try await sut.execute()
+        let metadata = try await sut.execute()
 
         // THEN
-        #expect(stations.isEmpty)
+        #expect(metadata.stations.count == 2)
+        #expect(metadata.metaFilters["timeshift"] == 1)
+        #expect(metadata.metaFilters["musical"] == 1)
+        #expect(metadata.metaFilters["on_air"] == 2)
     }
 }
