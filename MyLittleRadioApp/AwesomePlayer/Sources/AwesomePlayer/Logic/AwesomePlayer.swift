@@ -15,6 +15,7 @@ import Combine
 public struct AwesomePlayer {
 
     @Dependency(\.mediaPlayer) private var mediaPlayer
+    @Dependency(\.avAudioOutputInfo) private var avAudioOutputInfo
 
     @ObservableState
     public struct State: Equatable {
@@ -86,6 +87,7 @@ public struct AwesomePlayer {
         case playerStatusSubscription
         case playerProgressStatusSubscription
         case playerCurrentItemSubscription
+        case systemVolumeNotification
     }
 
     public init() { }
@@ -106,7 +108,8 @@ public struct AwesomePlayer {
                     ),
                     subscribeToPlayerStatus(),
                     subscribeToPlayerProgress(),
-                    subscribeToPlayerCurrentItem()
+                    subscribeToPlayerCurrentItem(),
+                    subscribeToSystemNotification()
                 )
                 
                 // MARK: Player Actions
@@ -217,7 +220,19 @@ public struct AwesomePlayer {
 
     // MARK: Subscription Handlers
 
-    private func subscribeToPlayerProgress() -> Effect <Action> {
+    private func subscribeToSystemNotification() -> Effect<Action> {
+        .run { [avAudioOutputInfo] send in
+            for await volume in await avAudioOutputInfo.deviceAudioDidChange() {
+                await send(.binding(.set(\.volume, CGFloat(volume))))
+            }
+        }
+        .cancellable(
+            id: Cancellable.systemVolumeNotification,
+            cancelInFlight: true
+        )
+    }
+
+    private func subscribeToPlayerProgress() -> Effect<Action> {
         .run { [mediaPlayer] send in
             for await playerProgress in await mediaPlayer.currentProgressPublisher {
                 await send(.playerProgressUpdate(playerProgress))
@@ -229,7 +244,7 @@ public struct AwesomePlayer {
         )
     }
 
-    private func subscribeToPlayerCurrentItem() -> Effect <Action> {
+    private func subscribeToPlayerCurrentItem() -> Effect<Action> {
         .run { [mediaPlayer] send in
             for await currentItem in await mediaPlayer.currentItemPublisher {
                 await send(.playerCurrentItemUpdate(currentItem))

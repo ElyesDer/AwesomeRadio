@@ -11,6 +11,9 @@ import Foundation
 import Dependencies
 
 extension DependencyValues {
+
+    // MARK: MediaPlayer Instance
+
     public var mediaPlayer: MediaPlayer {
         get { self[MediaPlayerKey.self] }
         set { self[MediaPlayerKey.self] = newValue }
@@ -21,6 +24,19 @@ extension DependencyValues {
             AwesomeMediaPlayer(
                 audioPlayer: AVFRQueuePlayer()
             )
+        }
+    }
+
+    // MARK: AVFoundation's AudioOutput Instance
+
+    var avAudioOutputInfo: AudioOutput {
+        get { self[AVAudioOutputInfoKey.self] }
+        set { self[AVAudioOutputInfoKey.self] = newValue }
+    }
+
+    private enum AVAudioOutputInfoKey: DependencyKey {
+        static var liveValue: any AudioOutput {
+            AVAudioSessionInfoProvider()
         }
     }
 }
