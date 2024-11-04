@@ -21,26 +21,32 @@ import ComposableArchitecture
 final class AwesomePlayerTests {
 
     var mediaPlayer: MediaPlayerMock!
+    var avAudioOutputInfo: AVAudioOutputInfoMock!
 
     init(
-        mediaPlayer: MediaPlayerMock = MediaPlayerMock()
+        mediaPlayer: MediaPlayerMock = MediaPlayerMock(),
+        avAudioOutputInfo: AVAudioOutputInfoMock = AVAudioOutputInfoMock()
     ) {
         self.mediaPlayer = mediaPlayer
+        self.avAudioOutputInfo = avAudioOutputInfo
     }
 
     deinit {
         mediaPlayer = nil
+        avAudioOutputInfo = nil
     }
 
     func makeStore(
         state: AwesomePlayer.State = .init(),
-        mediaPlayer: MediaPlayer = MediaPlayerMock()
+        mediaPlayer: MediaPlayer = MediaPlayerMock(),
+        avAudioOutputInfo: AVAudioOutputInfoMock = AVAudioOutputInfoMock()
     ) -> TestStoreOf<AwesomePlayer> {
         TestStore(
             initialState: state) {
                 AwesomePlayer()
             } withDependencies: {
                 $0.mediaPlayer = mediaPlayer
+                $0.avAudioOutputInfo = avAudioOutputInfo
             }
     }
 
@@ -51,12 +57,14 @@ final class AwesomePlayerTests {
 
         // GIVEN
         let audioItem: AudioItem = AudioItemStub.generate()
+        avAudioOutputInfo = .init(volume: 0.5)
 
         let store = makeStore(
             state: .init(playingList: [
                 audioItem
             ]),
-            mediaPlayer: mediaPlayer
+            mediaPlayer: mediaPlayer,
+            avAudioOutputInfo: avAudioOutputInfo
         )
 
         // WHEN
@@ -66,13 +74,15 @@ final class AwesomePlayerTests {
         // THEN
 
         await store.receive(\.playerCurrentItemUpdate)
-        await store.receive(\.playerProgressUpdate )
+        await store.receive(\.binding)
+        await store.receive(\.playerProgressUpdate)
         await store.receive(\.playerStatusUpdate, .idle)
 
         #expect(await mediaPlayer.addToQueueCalled)
-        #expect( mediaPlayer.audioStatusPublisherCalled)
+        #expect(mediaPlayer.audioStatusPublisherCalled)
         #expect(mediaPlayer.currentItemPublisherCalled)
         #expect(mediaPlayer.currentProgressPublisherCalled)
+        #expect(avAudioOutputInfo.deviceAudioDidChangeCalled)
     }
 
     // MARK: Player Action
@@ -130,7 +140,9 @@ final class AwesomePlayerTests {
             .addToQueue(
                 audioItem
             )
-        )
+        ) {
+            $0.playingList = [audioItem]
+        }
 
         // THEN
 

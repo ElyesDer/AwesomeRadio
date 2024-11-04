@@ -17,28 +17,82 @@ import MyLittleRadio
 @Suite("AppContainer Test Suite")
 struct AppContainerTests {
 
-    func makeStore() -> TestStoreOf<AppContainer> {
+    func makeStore(
+        stations: StationsFeature.State = .init()
+    ) -> TestStoreOf<AppContainer> {
         TestStore(
-            initialState: AppContainer.State.init()
+            initialState: AppContainer.State.init(
+                stations: stations
+            )
         ) {
             AppContainer()
-        } withDependencies: { _ in 
-
         }
     }
 
-    @Test("WHEN Tab changes THEN Update State")
-    func handleTabChanges() async throws {
+    @Test("GIVEN play actioned THEN fetch State and launch Player")
+    func testPlayAction() async {
+
+        let station = StationStub.generate(
+            id: "0",
+            streamURL: "http://valid.com"
+        )
+        let stationDetails: StationDetails.State = .init(
+            station: station
+        )
 
         // GIVEN
 
-        let store = makeStore()
+        var path = StackState<StationsFeature.Path.State>()
+        path.append(.detail(stationDetails))
 
-        // WHEN
+        let store = makeStore(
+            stations: StationsFeature.State.init(
+                stations: IdentifiedArrayOf<StationDetails.State>(
+                    uniqueElements: [
+                        StationDetails.State.init(
+                            station: station
+                        )
+                    ]
+                ),
+                path: path
+            )
+        )
 
-        await store.send(.selectTab(.settings)) {
-            // THEN
-            $0.currentTab = .settings
-        }
+        await store.send(.stations(.path(.element(id: 0, action: .detail(StationDetails.Action.onAppear)))))
+
     }
+
+    @Test("GIVEN play actioned with invalid url THEN abandon player starting")
+    func testPlayActionWithInvalidURL() async {
+
+        let station = StationStub.generate(
+            id: "0",
+            streamURL: "http://valid.com"
+        )
+        let stationDetails: StationDetails.State = .init(
+            station: station
+        )
+
+        // GIVEN
+
+        var path = StackState<StationsFeature.Path.State>()
+        path.append(.detail(stationDetails))
+
+        let store = makeStore(
+            stations: StationsFeature.State.init(
+                stations: IdentifiedArrayOf<StationDetails.State>(
+                    uniqueElements: [
+                        StationDetails.State.init(
+                            station: station
+                        )
+                    ]
+                ),
+                path: path
+            )
+        )
+
+        await store.send(.stations(.path(.element(id: 0, action: .detail(StationDetails.Action.onAppear)))))
+
+    }
+
 }

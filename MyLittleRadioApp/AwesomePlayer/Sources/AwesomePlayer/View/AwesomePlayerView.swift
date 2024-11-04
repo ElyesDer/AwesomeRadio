@@ -165,12 +165,14 @@ public struct AwesomePlayerView: View {
 
                 Spacer()
 
+                let isTimeShiftable = store.currentItem?.isTimeShiftable ?? true
+
                 VolumeSlider(
                     progress: $store.currentProgress,
                     tint: themeColor
                 )
                 .frame(height: 4, alignment: .bottom)
-                .disabled(store.currentItem?.isTimeShiftable ?? false)
+                .disabled(isTimeShiftable == false)
                 .matchedGeometryEffect(
                     id: "PlayerProgress",
                     in: animation
@@ -336,6 +338,9 @@ public struct AwesomePlayerView: View {
                         .frame(
                             height: reader.size.height * computeCoverHeightRatio()
                         )
+                        .shadow(
+                            radius: 10
+                        )
 
                         Spacer(minLength: 24)
 
@@ -431,6 +436,8 @@ public struct AwesomePlayerView: View {
                 let size = reader.size
                 let spacing = size.height * 0.04
 
+                let isTimeShiftable = store.currentItem?.isTimeShiftable ?? true
+
                 VStack(spacing: spacing) {
                     VStack(spacing: spacing) {
                         HStack(alignment: .center, spacing: 15) {
@@ -460,6 +467,7 @@ public struct AwesomePlayerView: View {
                             progress: $store.currentProgress,
                             tint: themeColor
                         )
+                        .disabled(isTimeShiftable == false)
                         .matchedGeometryEffect(
                             id: "PlayerProgress",
                             in: animation
@@ -483,7 +491,7 @@ public struct AwesomePlayerView: View {
                         alignment: .top
                     )
 
-                    HStack(spacing: 10) {
+                    HStack(spacing: 12) {
                         Button {
                             store.send(
                                 .set(
@@ -502,6 +510,7 @@ public struct AwesomePlayerView: View {
                                     )
                                 )
                         }
+                        .opacity(isTimeShiftable ? 1 : 0)
 
                         Spacer()
 
@@ -545,6 +554,7 @@ public struct AwesomePlayerView: View {
                                     )
                                 )
                         }
+                        .disabled(store.playingList.isEmpty)
 
                         Spacer()
 
@@ -566,6 +576,7 @@ public struct AwesomePlayerView: View {
                                     )
                                 )
                         }
+                        .opacity(isTimeShiftable ? 1 : 0)
                     }
                     .foregroundColor(.white)
                     .padding(.horizontal)
@@ -598,6 +609,7 @@ public struct AwesomePlayerView: View {
                                     .font(.title2)
                             }
                             .disabled(true)
+                            .opacity(0.5)
 
                             VStack(spacing: 6) {
                                 Button {
@@ -607,6 +619,8 @@ public struct AwesomePlayerView: View {
                                         .font(.title2)
                                 }
                             }
+                            .disabled(true)
+                            .opacity(0.5)
 
                             Button {
                                 store.send(

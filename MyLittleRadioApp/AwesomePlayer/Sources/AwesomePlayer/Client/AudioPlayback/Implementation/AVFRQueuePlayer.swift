@@ -39,6 +39,16 @@ public final class AVFRQueuePlayer: AVQueuePlayer, @preconcurrency AudioPlayback
     private var currentRateObservation: NSKeyValueObservation?
     private var timeObserver: Any?
 
+    override public init() {
+        try? AVAudioSession
+            .sharedInstance()
+            .setCategory(
+                AVAudioSession.Category.playback,
+                mode: AVAudioSession.Mode.default
+            )
+        super.init()
+    }
+
     deinit {
         currentPlayerItemObservation?.invalidate()
         currentRateObservation?.invalidate()

@@ -2,6 +2,8 @@
 
 import Dependencies
 
+// MARK: Unused
+
 extension DependencyValues {
 
     var apiClient: ApiClient {

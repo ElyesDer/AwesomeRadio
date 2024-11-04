@@ -137,6 +137,27 @@
         "squareImageUrl": "https://www.radiofrance.fr/s3/cruiser-production/2022/05/855d52d5-84bc-43c2-b8e6-8674c6667b34/1000x1000_squareimage_mouv_v2.jpg"
       },
       "isMusical": true
+    },
+    {
+        "id": "99",
+        "brandId": "MOUV",
+        "title": "[Test] Longer Title will result in Auto Scrollable Text which is nice to have",
+        "hasTimeshift": false,
+        "shortTitle": "[Test] Longer Short Title will result in Auto Scrollable",
+        "type": "on_air",
+        "streamUrl": "https://icecast.radiofrance.fr/mouv-midfi.mp3",
+        "analytics": {
+            "value": "mouv",
+            "stationAudienceId": 6
+        },
+        "liveRule": "apprf_mouv_player",
+        "colors": {
+            "primary": "#33332f"
+        },
+        "assets": {
+            "squareImageUrl": "https://www.radiofrance.fr/s3/cruiser-production/2022/05/855d52d5-84bc-43c2-b8e6-8674c6667b34/1000x1000_squareimage_mouv_v2.jpg"
+        },
+        "isMusical": true
     }
   ]
 }

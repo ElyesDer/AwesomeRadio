@@ -35,8 +35,14 @@ struct StationsView: View {
                             alignment: .center,
                             spacing: 8
                         ) {
-                            Text("Unable to load content with error")
+                            Text("Unable to load content with Message:")
                             Text(message)
+                            Image(systemName: "arrow.clockwise")
+                                .font(.system(size: 40))
+                            Text("Tap to Refresh")
+                        }
+                        .onTapGesture {
+                            store.send(.onRefresh)
                         }
                     default:
                         VStack(alignment: .leading) {
@@ -51,7 +57,11 @@ struct StationsView: View {
                             }
 
                             ScrollView {
-                                BodyView()
+                                if store.feed.isEmpty {
+                                    EmptyFeed()
+                                } else {
+                                    BodyView()
+                                }
                             }
                             /// Warning: iOS16.4 Support only
                             .refreshable {
@@ -78,6 +88,17 @@ struct StationsView: View {
                     }
                 }
             }
+        }
+    }
+
+    @ViewBuilder
+    private func EmptyFeed() -> some View {
+        VStack {
+            Spacer()
+            Image(systemName: "figure.walk.departure")
+                .font(.system(size: 40))
+            Text("Content Left the building")
+            Text("Please Pull to Refresh")
         }
     }
 

@@ -4,6 +4,8 @@ import Dependencies
 import DependenciesMacros
 import Domain
 
+// MARK: Unused
+
 @DependencyClient
 struct ApiClient: Sendable {
 

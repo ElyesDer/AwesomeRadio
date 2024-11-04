@@ -13,13 +13,13 @@ import AwesomePlayer
 struct AppContainer {
     @ObservableState
     struct State: Equatable {
+
         var stations: StationsFeature.State = .init()
+        var awesomePlayer: AwesomePlayer.State = .init()
 
         var isPlayerVisible: Bool {
             awesomePlayer.isViewable
         }
-
-        var awesomePlayer: AwesomePlayer.State = .init()
     }
 
     @CasePathable
@@ -60,7 +60,6 @@ struct AppContainer {
                     )
                 )
             ):
-
                 guard let selectedState = state.stations.path[id: id, case: \.detail] else {
                     return .none
                 }
@@ -78,7 +77,6 @@ struct AppContainer {
                     )
                 )
             ):
-
                 guard let selectedState = state.stations.path[id: id, case: \.detail] else {
                     return .none
                 }
@@ -96,7 +94,6 @@ struct AppContainer {
                     )
                 )
             ):
-
                 guard let selectedState: StationDetails.State = state.stations.stations[id: id] else {
                     return .none
                 }

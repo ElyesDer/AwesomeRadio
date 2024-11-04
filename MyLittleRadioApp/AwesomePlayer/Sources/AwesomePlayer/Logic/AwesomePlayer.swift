@@ -172,7 +172,8 @@ public struct AwesomePlayer {
                 if let playingItem {
                     if let duration = playingItem.duration,
                        duration > 0 {
-                        state.currentProgress = playingItem.current / duration
+                        let computedDuration = playingItem.current / duration
+                        state.currentProgress = min(max(computedDuration, 0), 1)
                     } else {
                         state.currentProgress = 1
                     }

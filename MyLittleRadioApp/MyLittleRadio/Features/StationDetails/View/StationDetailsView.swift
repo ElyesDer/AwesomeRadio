@@ -91,6 +91,7 @@ struct StationDetailsView: View {
                     themeColor
                 }
             }
+            .ignoresSafeArea()
         }
     }
 }
